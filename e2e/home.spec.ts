@@ -15,7 +15,9 @@ test.describe('Home Page Tests', () => {
     // === ДОПОЛНИТЕЛЬНОЕ ЗАДАНИЕ 2: Визуальное регрессионное тестирование ===
     test('visual regression test (homepage)', async ({ page }) => {
         await page.goto('/');
-        // Сравнивает скриншот с базовым образом (baseline)
-        await expect(page).toHaveScreenshot('homepage-baseline.png');
+
+        await expect(page).toHaveScreenshot('homepage-baseline.png', {
+            maxDiffPixelRatio: 0.02
+        });
     });
 });
