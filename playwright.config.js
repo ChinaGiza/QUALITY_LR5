@@ -16,7 +16,7 @@ export default defineConfig({
         { name: 'webkit', use: { ...devices['Desktop Safari'] } },
     ],
     webServer: {
-        command: 'npx serve -s dist -l 3000',
+        command: 'npx serve -s . -l 3000',
         port: 3000,
         timeout: 120 * 1000,
         reuseExistingServer: !process.env.CI,
