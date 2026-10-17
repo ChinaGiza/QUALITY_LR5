@@ -43,14 +43,16 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci
-      - run: npm run build
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npx playwright test --project=${{ matrix.browser }}
+
+      # Сохраняем отчет Playwright как артефакт
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
           name: playwright-report-${{ matrix.browser }}
           path: playwright-report/
+          retention-days: 30
 
   lighthouse:
     runs-on: ubuntu-latest
@@ -87,17 +89,46 @@ jobs:
           fi
           echo "✅ Quality gate PASSED"
 
+  # === ДОПОЛНИТЕЛЬНОЕ ЗАДАНИЕ: Публикация отчетов ===
   deploy-reports:
     runs-on: ubuntu-latest
-    needs: [ e2e-tests, lighthouse ]
-    if: always()
+    needs: [e2e-tests, lighthouse]
+    if: always() # Деплоим даже если тесты упали, чтобы посмотреть отчет об ошибке
+    permissions:
+      pages: write      # Права на запись в Pages
+      id-token: write   # Права для OIDC
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          path: public/reports
+
+      - name: Create index page for reports
+        run: |
+          mkdir -p public
+          echo "<h1>Quality Reports</h1><ul>" > public/index.html
+          for dir in public/reports/*; do
+            if [ -d "$dir" ]; then
+              dirname=$(basename "$dir")
+              echo "<li><a href='./reports/$dirname/index.html'>$dirname Report</a></li>" >> public/index.html
+            fi
+          done
+          echo "</ul>" >> public/index.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'public'
+
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./artifacts
+        id: deployment
+        uses: actions/deploy-pages@v4
