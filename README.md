@@ -1,7 +1,8 @@
 # Quality Lab 5 - CI/CD Pipeline
 
-![Quality Gate](https://github.com/USERNAME/REPO/actions/workflows/quality-gate.yml/badge.svg)
-![Nightly Build](https://github.com/USERNAME/REPO/actions/workflows/nightly-build.yml/badge.svg)
+![Quality Gate](https://github.com/ChinaGiza/QUALITY_LR5/actions/workflows/quality-gate.yml/badge.svg)
+![Coverage](https://codecov.io/gh/ChinaGiza/QUALITY_LR5/branch/main/graph/badge.svg)
+![Nightly Build](https://github.com/ChinaGiza/QUALITY_LR5/actions/workflows/nightly-build.yml/badge.svg)
 
 ## Описание
 Проект создан в рамках лабораторной работы по Управлению качеством.
