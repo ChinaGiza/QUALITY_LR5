@@ -15,10 +15,10 @@ export default defineConfig({
         { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
         { name: 'webkit', use: { ...devices['Desktop Safari'] } },
     ],
-    // Автоматический запуск сервера для тестов
     webServer: {
-        command: 'npm run serve',
-        url: 'http://localhost:3000',
+        command: 'npx serve -s dist -l 3000',
+        port: 3000,
+        timeout: 120 * 1000,
         reuseExistingServer: !process.env.CI,
     },
 });

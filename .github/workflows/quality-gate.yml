@@ -64,7 +64,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx serve -s dist -l 3000 &
-      - run: sleep 3 # Ждем поднятия сервера
+      - run: sleep 3
       - run: npx lhci autorun
 
   summary:
