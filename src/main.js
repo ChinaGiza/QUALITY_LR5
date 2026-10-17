@@ -1,3 +1,5 @@
+/* global document */
+
 // Функции для Unit-тестов
 export const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
