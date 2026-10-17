@@ -1,0 +1,37 @@
+name: Nightly Build & Report
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # Каждый день в 06:00 UTC
+  workflow_dispatch: # Возможность запустить вручную
+
+jobs:
+  nightly-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:coverage
+
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
+
+      # Отправка отчета на email
+      - name: Send Email Report
+        if: always() # Отправляем даже если тесты упали
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Nightly Build Report - Quality Lab 5"
+          to: ${{ secrets.RECIPIENT_EMAIL }}
+          from: GitHub Actions <quality-lab@example.com>
+          body: "Nightly build completed. Status - check GitHub Actions logs."
