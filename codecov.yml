@@ -1,5 +1,6 @@
 ignore:
-  - "tests/**/*"       # Исключить папку с тестами
-  - "**/*_test.go"     # Пример для Go (если тесты лежат рядом с кодом)
-  - "**/*.spec.js"     # Пример для JavaScript/TypeScript
-  - "setup.cfg"        # Служебные файлы
+  - "e2e/**/*"
+  - "playwright.config.js"
+  - "vitest.config.js"
+  - "eslint.config.js"
+  - "src/**/*.test.js"
